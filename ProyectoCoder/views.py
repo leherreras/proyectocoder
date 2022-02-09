@@ -2,6 +2,9 @@ from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.contrib.auth import login, logout, authenticate
 from django.shortcuts import redirect, render
 from .forms import UserRegisterForm
+from django.contrib.auth.models import User
+import django
+from django.contrib.auth.decorators import login_required
 
 
 def login_request(request):
@@ -20,16 +23,17 @@ def login_request(request):
 
                 return redirect('List')
             else:
-                return redirect('New')
+                return redirect('Login')
 
         else:
-            return redirect('New')
+            return redirect('Login')
     
     form = AuthenticationForm()
 
     return render(request, 'login.html', {'form': form})
 
 
+@login_required
 def register(request):
     if request.method == 'POST':
 
@@ -40,13 +44,19 @@ def register(request):
         if form.is_valid():
             
             username = form.data['username']
-            form.save()
+            try:
+                user_new = User.objects.get(username=username)
+            except django.contrib.auth.models.User.DoesNotExist:
+                user_new = None
+
+            if not user_new:
+
+                form.save()
 
             return redirect('Login')
 
     else:
-        print('asdfasdfadsf')        
         # form = UserCreationForm()
-        form = UserRegisterForm(request.POST)
+        form = UserRegisterForm()
 
-    return render(request, 'register.html', {'form': form})
+    return render(request, 'login.html', {'form': form})

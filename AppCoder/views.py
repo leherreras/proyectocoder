@@ -2,13 +2,12 @@ from dataclasses import field
 from django.views.generic import ListView
 from django.views.generic.detail import DetailView
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
-
-
+from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Curso
 
 # Create your views here.
 
-class CursoList(ListView):
+class CursoList(ListView, LoginRequiredMixin):
 
     model = Curso
     template_name = "AppCoder/cursos_list.html"
