@@ -9,8 +9,8 @@
 <body>
 
     {% if request.user.is_authenticated %}
-    <img src="{{(Avatar.objects.filter(user=request.user.id)[0].imagen.url)}}">
-    Hola {{user.username}}, bienvenid@ a nuestro sistema.
+    <img style="height: 50px;" src="{{user.avatar.imagen.url}}">
+    Hola {{user.username}} {{user.last_name}}, bienvenid@ a nuestro sistema.
     {% else %}
     Login
     {% endif %}
